@@ -1,0 +1,74 @@
+name: 构建并发布 EPUB
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-latest-epub
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: 构建并更新最新版 EPUB
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装构建与校验工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes pandoc poppler-utils epubcheck
+
+      - name: 构建 EPUB
+        run: ./scripts/build-epub.sh dist/forward-deployed-engineer-zh.epub
+
+      - name: 校验 EPUB
+        run: epubcheck dist/forward-deployed-engineer-zh.epub
+
+      - name: 更新最新版 Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: epub-latest
+          EPUB_PATH: dist/forward-deployed-engineer-zh.epub
+        run: |
+          set -euo pipefail
+
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh api \
+              --method PATCH \
+              "repos/${GITHUB_REPOSITORY}/git/refs/tags/${RELEASE_TAG}" \
+              -f sha="${GITHUB_SHA}" \
+              -F force=true >/dev/null
+          else
+            gh api \
+              --method POST \
+              "repos/${GITHUB_REPOSITORY}/git/refs" \
+              -f ref="refs/tags/${RELEASE_TAG}" \
+              -f sha="${GITHUB_SHA}" >/dev/null
+          fi
+
+          short_sha="${GITHUB_SHA:0:7}"
+          release_notes="由 main 分支的提交 [${short_sha}](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}) 自动构建。每次同步或推送后，此附件都会被最新版覆盖。"
+
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh release edit "${RELEASE_TAG}" \
+              --title "《前线部署工程师》EPUB（最新版）" \
+              --notes "${release_notes}" \
+              --latest
+          else
+            gh release create "${RELEASE_TAG}" \
+              --title "《前线部署工程师》EPUB（最新版）" \
+              --notes "${release_notes}" \
+              --latest
+          fi
+
+          gh release upload "${RELEASE_TAG}" "${EPUB_PATH}" --clobber

@@ -38,6 +38,18 @@
 
 - **在线阅读**：点击下方目录，直接在 GitHub 上按章节阅读
 - **整本下载**：[前线部署工程师.pdf](前线部署工程师.pdf)（根目录合并版，95 页；如有更新以章节 Markdown 为准）
+- **EPUB 下载**：[前线部署工程师（最新版）](../../releases/download/epub-latest/forward-deployed-engineer-zh.epub)（每次更新 `main` 分支后自动重新打包）
+
+## 本地构建 EPUB
+
+macOS 先安装 Pandoc 和 Poppler，再运行打包脚本：
+
+```bash
+brew install pandoc poppler
+./scripts/build-epub.sh
+```
+
+生成文件位于 `dist/FDE（前沿部署工程师）从零入门指南-范冰-YYYYMMDDHHmm.epub`，其中末尾是构建时的年月日时分。也可以把自定义输出路径作为脚本的第一个参数传入。
 
 ## 目录
 

@@ -1,0 +1,65 @@
+body {
+  font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC", serif;
+  line-height: 1.75;
+  margin: 5%;
+  text-align: justify;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+  font-weight: 600;
+  text-align: left;
+}
+
+h1 {
+  break-before: page;
+  font-size: 1.8em;
+  margin-bottom: 1.5em;
+}
+
+h2 {
+  font-size: 1.35em;
+  margin-top: 2em;
+}
+
+h3 {
+  font-size: 1.1em;
+  margin-top: 1.6em;
+}
+
+p {
+  margin: 0.75em 0;
+}
+
+blockquote {
+  border-left: 0.2em solid currentColor;
+  margin: 1.25em 0;
+  padding-left: 1em;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin: 1em 0;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid currentColor;
+  padding: 0.45em;
+  text-align: left;
+  vertical-align: top;
+}
+
+code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+}
