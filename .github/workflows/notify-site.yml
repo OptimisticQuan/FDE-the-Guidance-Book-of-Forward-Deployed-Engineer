@@ -1,0 +1,17 @@
+name: notify-site
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 触发 fde4ai 站点重建
+        run: |
+          curl -f -X POST \
+            -H "Authorization: Bearer ${{ secrets.SITE_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/xdash/fde4ai/dispatches \
+            -d '{"event_type":"book-updated"}'

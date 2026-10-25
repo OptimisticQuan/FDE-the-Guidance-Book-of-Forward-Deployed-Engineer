@@ -28,7 +28,8 @@ if ((${#chapters[@]} == 0)); then
   exit 1
 fi
 
-cover_source="${repo_root}/前线部署工程师.pdf"
+version="$(tr -d '[:space:]' < "${repo_root}/VERSION")"
+cover_source="${repo_root}/前线部署工程师（FDE）v${version}.pdf"
 if [[ ! -f "${cover_source}" ]]; then
   printf '未找到封面来源：%s\n' "${cover_source}" >&2
   exit 1
